@@ -36,11 +36,16 @@
       var validateName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('用户名不能为空'));
-        }else if(! (/^[a-zA-Z0-9]{4,8}$/.test(value)) ){
-          callback(new Error('请输入正确格式'));
-        }else{
-          callback()
         }
+        setTimeout(() => {
+          if(! (/^[a-zA-Z0-9]{4,8}$/.test(value)) ){
+            callback(new Error('请输入正确格式'));
+          }else if(! (this.isRepeat()) ){
+            callback(new Error('用户名已存在'))
+          }else{
+            callback()
+          }
+        }, 600); //验证加载中动画
       };
       var validateEmail = (rule, value, callback) => {
         if (!value) {
@@ -77,10 +82,10 @@
       };
       return {
         ruleForm: {
-          name:'',
-          pass: '',
-          checkPass: '',
-          email: ''
+          name:'1111',
+          pass: '1111',
+          checkPass: '1111',
+          email: '1111@qq.com'
         },
         rules: {
           name: [
@@ -98,19 +103,50 @@
         }
       };
     },
+    mounted(){
+      
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          setTimeout(() => {
+            loading.close();
+          }, 500);
+            this.$axios.$post('/api/user/register',{
+              name: this.ruleForm.name,
+              pass: this.ruleForm.pass,
+              email: this.ruleForm.email
+            })
+            .then(res=>{
+              if(res.code===0){
+                this.$message({
+                  message: '恭喜你，注册成功',
+                  type: 'success'
+                });
+                this.$router.push('/user/login');
+              }else{
+                this.$message.error('注册失败');
+              }
+            })
           } else {
-            console.log('error submit!!');
+            this.$message.error('请填写正确格式的信息');
             return false;
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      async isRepeat(){
+        let {code} = await this.$axios.$get(`/api/user/isrepeat?name=${this.ruleForm.name}`)
+        return code==0 ? true:false;
       }
     }
   }
@@ -118,13 +154,15 @@
 
 <style lang="scss" scoped>
 .register{
-  min-width: 450px;
+  min-width: 400px;
+  max-width: 666px;
   background-color: rgb(171, 235, 203);
-  position:absolute;
+  position:fixed;
   left:50%;    /* 定位父级的50% */
   top:50%;
   transform: translate(-50%,-50%); 
-  padding: 50px;
+  padding: 30px 30px 10px 0;
+  box-sizing: border-box;
   box-shadow: 0 0 8px green;
 }
 </style>
