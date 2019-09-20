@@ -28,8 +28,8 @@ export default {
     if(loginUser){
       this.name=loginUser.name
       this.pass=loginUser.pass
+      this.login()
     }
-    // this.login()
   },
   methods:{
     async login(){
@@ -43,6 +43,7 @@ export default {
       })
       if(code==0){
         localStorage.setItem('loginUser',JSON.stringify({name:this.name,pass:this.pass}) )
+        this.$store.commit('login',0)
         const loading = this.$loading({
           lock: true,
           text: '登录中',
@@ -53,7 +54,7 @@ export default {
           loading.close();
         }, 500);
         this.$message('登录成功');
-        this.$router.push('/')
+        this.$router.push('/user/my/myinfo')
       }else{
         this.$message('登录失败！请重试');
       }

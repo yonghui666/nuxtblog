@@ -4,3 +4,11 @@
   flex-direction: $direction;
   flex-wrap: $wrap;
 }
+
+// 全局过度动画
+// .page-enter-active, .page-leave-active {
+//   transition: opacity .5s;
+// }
+// .page-enter, .page-leave-active {
+//   opacity: 0;
+// }

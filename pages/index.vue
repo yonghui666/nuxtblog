@@ -3,7 +3,10 @@
     <el-container style="margin:0 8%">
       <el-aside width="200px">Aside</el-aside>
       <el-container >
-        <el-main>Main</el-main>
+        <el-main>
+          文章列表
+          <p>分页</p>
+        </el-main>
       </el-container>
     </el-container>
   </div>

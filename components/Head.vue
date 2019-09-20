@@ -1,21 +1,44 @@
 <template>
   <div class="header">
-    <div  class="logo">
+    <nuxt-link to="/" class="logo">
       <img src="~/assets/images/logo2.png" alt="">
       <h2>创作吧</h2>
-    </div>
+    </nuxt-link>
     <div class="search hidden-xs-only">
       <el-input placeholder="请输入内容" v-model="search" class="input-with-select">
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
     </div>
-    <div class="rbox">
+    <div class="rbox" v-if="this.$store.state.islogin">
       <nuxt-link to="/user/login">
         <el-button type="primary">登录</el-button>
       </nuxt-link>
       <nuxt-link to="/user/register">
         <el-button type="primary">注册</el-button>
       </nuxt-link>
+    </div>
+    <div class="rbox" v-else>
+      <el-dropdown>
+        <el-button type="primary">
+          <nuxt-link to="/user/my/myinfo">
+            我的<i class="el-icon-arrow-down el-icon--right"></i>
+          </nuxt-link>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <nuxt-link to="/user/my/myinfo">个人资料</nuxt-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <nuxt-link to="/user/my/myarticle">我的文章</nuxt-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <nuxt-link to="/user/my/mycmt">我的评论</nuxt-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <nuxt-link to="/user/my/myinfo">待做功能</nuxt-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -26,6 +49,11 @@ export default {
   data(){
     return{
       search:''
+    }
+  },
+  mounted(){
+    if(localStorage.getItem('loginUser')){
+      this.$store.commit('login',0)
     }
   }
 }
@@ -48,6 +76,7 @@ export default {
     h2{
       font-weight: 888;
       font-size: 24px;
+      color: #000;
     }
   }
 }
