@@ -21,7 +21,7 @@ export default {
         {id:1,msg:'我的文章',to:'/user/my/myarticle'},
         {id:2,msg:'我的草稿',to:'/user/my/mycaogao' },
         {id:3,msg:'我的评论',to:'/user/my/mycmt'},  
-        {id:4,msg:'待扩展功能',to:'/user/my/myinfo'},
+        {id:4,msg:'开始创作',to:'/article/write'},
       ]
     }
   }
@@ -46,6 +46,7 @@ export default {
   .user_info{
     flex: 1;
     padding: 20px;
+    height: 100vh;
     box-sizing: border-box;
     background-color: #fff;
     box-shadow: 0 0 4px #fff;

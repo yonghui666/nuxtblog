@@ -8,7 +8,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <img v-if="myinfo.headimg" :src="myinfo.headimg" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </div>
@@ -56,8 +56,8 @@ export default {
       formpass:'',
       formemail:'',
       formqianming:'',
-      formLabelWidth: '120px',
-      imageUrl:'',
+      formLabelWidth: '80px',
+      headimg:'',
     }
   },
   mounted(){
@@ -101,7 +101,13 @@ export default {
     },
     // 上传图片
     handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+        // this.headimg = URL.createObjectURL(file.raw);
+        // this.headimg = res.msg
+        if(res.code==0){
+          this.getMyInfo()
+        }else{
+          this.$message.error('上传失败');
+        }
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';

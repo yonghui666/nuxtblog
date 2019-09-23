@@ -1,6 +1,8 @@
+// export default function (ctx) {
+  // console.log(ctx);
 export default function ({ $axios, redirect }) {
   $axios.onRequest(config => {
-    console.log('Making request to ' + config.url)
+    console.log('--->>>---Making request to ' + config.url)
   })
 
   $axios.onError(error => {
@@ -10,9 +12,20 @@ export default function ({ $axios, redirect }) {
     }
   })
 
-  $axios.defaults.baseURL = 'http://localhost:3333'
+  // $axios.defaults.baseURL = 'http://localhost:3333'
 
-  
+  $axios.interceptors.response.use(function (response) {
+    // 用户信息是否超时，重定向到登录页面 
+    if (response.data.islogin == '请登录') {
+      redirect('/user/login')
+    }
+    return response
+  }, function (error) {
+    // Do something with response error 
+    return Promise.reject(error)
+  })
+
+
   // $axios.interceptors.request.use(
   //   config => {
   //     // 获取token，配置请求头

@@ -37,7 +37,7 @@ export default {
         this.$message.error('请填写账号或密码');
         return 
       }
-      let {code} = await this.$axios.$post('/api/user/login',{
+      let {code} = await this.$axios.$post('/api/login',{
         name:this.name.trim(),
         pass:this.pass.trim()  
       })
