@@ -1,8 +1,5 @@
 <template>
     <Panel title="我的文章" cname="panel">
-      <!-- <template>
-        
-      </template> -->
       <List :artlist="myarticle"></List>
     </Panel>
 </template>

@@ -45,7 +45,14 @@ export default {
     .zhaiyao , .time{
       color: gray;
     }
-    .zhaiyao{margin: 10px 0; text-indent: 2em;}
+    .zhaiyao{
+      margin: 10px 0; text-indent: 2em;
+      width: 100%;
+      height: auto;
+      word-wrap:break-word;
+      word-break:break-all;
+      overflow: hidden;
+    }
     .time{font-size: small}
     hr{
       background-color: #eee;

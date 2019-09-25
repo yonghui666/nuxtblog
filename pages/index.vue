@@ -1,39 +1,19 @@
 <template>
   <div class="blog">
-    <el-container style="margin:0 8%">
-      <el-aside width="200px">Aside</el-aside>
-      <el-container >
-        <el-main>
-          文章列表
-          <p>分页</p>
-        </el-main>
-      </el-container>
-    </el-container>
+    <artnav></artnav>
   </div>
 </template>
 
 <script>
-
+import artnav from './artnav'
 export default {
-  components: {
+  components: { artnav },
+  created(){
+    this.$router.push('/artnav/recommend')
   }
 };
 </script>
+<style lang="scss" scoped>
 
-<style>
- 
-  
-  .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
-  }
-  
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 770px;
-  }
 </style>
+

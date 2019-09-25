@@ -10,11 +10,6 @@
 
 <script>
 export default {
-  data(){
-    return{
-      // artinfo:{}
-    }
-  },
   async asyncData({$axios,params}){
     let {code,msg} = await $axios.$get('/api/art/info',{params:{id:params.id}})
     return { artinfo: msg}

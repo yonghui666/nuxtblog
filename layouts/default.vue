@@ -22,6 +22,6 @@ export default {
     text-align: center;
     line-height: 60px;
   }
-  
+.el-header{margin-bottom: 20px;}
 </style>
 

@@ -42,7 +42,6 @@ export default {
         }else{
           this.$message.error('发表失败！')
         }
-        console.log(this.$refs.editor.editorContent);
       }
     },
     
