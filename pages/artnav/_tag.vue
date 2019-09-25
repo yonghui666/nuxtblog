@@ -2,7 +2,7 @@
   <section class="artlist">
     <div v-if="artlist">
       <nuxt-link  class="list_item" 
-        :to="{name:'article-id',params:{id:item.id}}"
+        :to="{name:'allpublic-artinfo',query:{id:item.id}}"
         v-for="item in artlist" :key="item.id"
       >
         <h2>标题：{{item.title}}  <el-tag type="success">{{item.tag}}</el-tag></h2>
@@ -10,6 +10,15 @@
         <p class="time">发表时间：{{item.time}}</p>
         <hr>
       </nuxt-link>
+
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :pager-count="5"
+        :page-size="pagesize"
+        @current-change="handleCurrentChange"
+        :total="pagenum">
+      </el-pagination>
     </div>
     <div v-else class="isnullbox">
       <h2>未找到相关结果哦。。。</h2>
@@ -22,21 +31,43 @@ export default {
   data(){
     return{
       // artlist:[]
+      pagenum:1000,
+      pagesize:6
     }
   },
   async asyncData({$axios,params}){
-    let {code,msg} = await $axios.$get('/api/art/search',{params:{tag:params.tag}})
-    return { artlist: msg}
+    try {
+      let {code,msg,pagenum} = await $axios.$get('/api/art/search',{params:{
+        tag:params.tag,
+        pagecurrent:1,
+        pagesize:6
+      }})
+      return { artlist: msg,pagenum}
+    } catch (error) {
+      console.log(error);
+    }
   },
   // created(){
   //   this.getArtlist()
   // },
-  // methods:{
-  //   async getArtlist(){
-  //     let {code, msg} = await this.$axios.$get('/api/art/search',{params:{tag:this.$route.params.tag}})
-  //     this.artlist=msg
-  //   }
-  // }
+  methods:{
+    // async getArtlist(){
+    //   let {code, msg} = await this.$axios.$get('/api/art/search',{
+    //     tag:this.$route.params.tag,
+    //     pagecurrent:1, pagesize:3
+    //   })
+    //   this.artlist=msg
+    // },
+    async handleCurrentChange(val){
+      let {code,msg,pagenum} = await this.$axios.$get('/api/art/search',{params:{
+        tag:this.$route.params.tag,
+        pagecurrent:val,
+        pagesize:this.pagesize
+      }})
+      this.artlist=msg
+      this.pagenum=pagenum
+    }
+  }
 }
 </script>
 
@@ -72,7 +103,8 @@ export default {
 .isnullbox{
   >h2{
     font-size: 20px;
-    
+
   }
+
 }
 </style>
