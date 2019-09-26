@@ -1,6 +1,6 @@
 <template>
   <div class="info">
-    <div class="sidebar hidden-xs-only">
+    <div class="sidebar hidden-sm-and-down">
       <div class="writerinfo">
         <h2>作者信息</h2>
         <hr>
@@ -13,6 +13,7 @@
     <section class="articleinfo">
       <h2>{{artinfo.title}}</h2>
       <el-tag>{{artinfo.tag}}</el-tag>
+      <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:writerinfo.name}}">-->点击访问TA的主页</nuxt-link>
       <p class="time">发表时间：{{artinfo.time}}</p>
       <div v-html="artinfo.content" class="content"></div>
     </section>
@@ -30,17 +31,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box{
-  background-color: #fff;
-  box-shadow: 0 0 8px #ddd;
-  padding: 20px;
-  box-sizing: border-box;
-}
+@import '~/assets/css/base.scss';
+
 .info{
   margin: 0 8%;
   min-height: 800px;
   display: flex;
-  
+  a{color: blue}
   .sidebar{
     margin-right: 20px;
     .writerinfo{
@@ -53,7 +50,7 @@ export default {
       }
       hr{margin: 15px 0;}
       p{margin: 10px 0;}
-      a{color: blue}
+      
       .headimg{
         border-radius: 50%;
         margin: 0 auto;

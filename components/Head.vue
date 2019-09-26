@@ -5,8 +5,8 @@
       <h2>创作吧</h2>
     </nuxt-link>
     <div class="search hidden-xs-only">
-      <el-input placeholder="请输入内容" v-model="search" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-input placeholder="请输入内容" v-model="key" class="input-with-select">
+        <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
       </el-input>
     </div>
     <div class="rbox" v-if="this.$store.state.islogin">
@@ -18,11 +18,9 @@
       </nuxt-link>
     </div>
     <div class="rbox" v-else>
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <el-button type="primary">
-          <nuxt-link to="/user/my/myinfo">
-            我的<i class="el-icon-arrow-down el-icon--right"></i>
-          </nuxt-link>
+          我的<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
@@ -48,12 +46,24 @@ export default {
   name:'Head',
   data(){
     return{
-      search:''
+      key:''
     }
   },
   mounted(){
     if(localStorage.getItem('loginUser')){
       this.$store.commit('login',0)
+    }
+  },
+  methods:{
+    search(){
+      //点击搜索跳转到新的标签页
+      let newpage = this.$router.resolve({
+        path:'/allpublic/search',
+        query:{
+          key:this.key
+        }
+      })
+      window.open(newpage.href, '_blank');
     }
   }
 }

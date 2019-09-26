@@ -49,3 +49,10 @@ a{
     text-decoration: none;
     color: #333;
 }
+
+//为手机端时清空外边距；
+@media screen and (max-width: 700px) {
+    .userhomepage , .info, .home, .user, .write, .search{
+        margin: 0 !important
+    };
+}

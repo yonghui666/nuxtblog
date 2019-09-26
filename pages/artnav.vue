@@ -8,7 +8,18 @@
         <nuxt-link :to="{name:'artnav-tag',params:{tag:item.to}}">{{item.navname}}</nuxt-link>
       </div>
     </div>
+    <!-- 手机端才显示的滑动导航条 -->
     <div class="artlist">
+      <div class="h5nav hidden-sm-and-up">
+        <div style="width:200%">
+          <div :class="{'h5nav-item':true,'isclick':index==isclick}"
+            v-for="(item,index) in pcnav" :key="item.id"
+            @click="flag(index)"
+            >
+            <nuxt-link :to="{name:'artnav-tag',params:{tag:item.to}}">{{item.navname}}</nuxt-link>
+          </div>
+        </div>
+      </div>
       <nuxt-child/> 
     </div>
   </div>
@@ -67,6 +78,16 @@ export default {
       }
       .isclick{
         background-color: #eee;
+      }
+    }
+    .h5nav{
+      overflow-x: auto;
+      line-height: 50px;
+      padding-left: 30px;
+      
+      .h5nav-item{
+        width: 80px;
+        float: left;
       }
     }
     .artlist{
