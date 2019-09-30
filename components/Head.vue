@@ -2,10 +2,10 @@
   <div class="header">
     <nuxt-link to="/" class="logo">
       <img src="~/assets/images/logo2.png" alt="">
-      <h2>创作吧</h2>
+      <h2 class="hidden-xs-only">创作吧</h2>
     </nuxt-link>
-    <div class="search hidden-xs-only">
-      <el-input placeholder="请输入内容" v-model="key" class="input-with-select">
+    <div class="search">
+      <el-input placeholder="搜索一下" v-model="key" @keyup.enter.native="search" class="input-with-select">
         <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
       </el-input>
     </div>
@@ -30,10 +30,13 @@
             <nuxt-link to="/user/my/myarticle">我的文章</nuxt-link>
           </el-dropdown-item>
           <el-dropdown-item>
-            <nuxt-link to="/user/my/mycmt">我的评论</nuxt-link>
+            <nuxt-link to="/article/write">开始创作</nuxt-link>
+          </el-dropdown-item>
+          <el-dropdown-item @click.native="logout">
+            退出登录
           </el-dropdown-item>
           <el-dropdown-item>
-            <nuxt-link to="/user/my/myinfo">待做功能</nuxt-link>
+            <nuxt-link to="/user/my/myinfo">待增功能</nuxt-link>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -64,7 +67,17 @@ export default {
         }
       })
       window.open(newpage.href, '_blank');
+    },
+    async logout(){
+      if(! (localStorage.getItem('loginUser') )) return this.$message('请先登录');
+      let {code} = await this.$axios.$get('/api/logout')
+      if(code==0){
+        this.$message.success('退出成功')
+        localStorage.removeItem('loginUser')
+        this.$router.replace('/user/login')
+      }
     }
+
   }
 }
 </script>
@@ -90,4 +103,14 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 700px){
+  .search{
+    width: 50%;
+  }
+  .rbox{
+    width: 20%;
+  }
+}
+
 </style>

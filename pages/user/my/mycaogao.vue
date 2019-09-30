@@ -1,6 +1,6 @@
 <template>
     <Panel title="我的草稿">
-      <nuxt-link v-if="isnull" to="/user/my/myarticle">
+      <nuxt-link v-if="isnull" to="/article/write">
         <el-button type="primary">还没有草稿哦，点我去创作！</el-button>
       </nuxt-link>
       <List :artlist="mycaogao" v-else></List>

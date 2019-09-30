@@ -14,11 +14,8 @@ export default {
   components:{Editor},
   data(){
     return{
-      artinfo:this.$route.params.artinfo || {}
+      artinfo:this.$route.params.artinfo || {},
     }
-  },
-  watch:{
-
   },
   methods:{
     async postArt(iscaogao){
@@ -27,11 +24,12 @@ export default {
       }else if(this.$refs.editor.tag==''){
         return this.$message.error('请选择文章标签')
       }else{
+        let zhaiyao = this.$refs.editor.editor.txt.text().replace(/&nbsp;/g,'').substring(0,60)
         let {code,msg} = await this.$axios.$post('/api/art/write',{
           title: this.$refs.editor.title.trim(),
           tag: this.$refs.editor.tag,
           content: this.$refs.editor.editorContent,
-          zhaiyao: this.$refs.editor.editor.txt.text().substring(0,100),
+          zhaiyao: zhaiyao,
           caogao: iscaogao
         })
         if(code==0){
@@ -42,8 +40,15 @@ export default {
         }
       }
     },
-   
+    async islogin(){
+      //验证登录是否过期，过期自动登录
+      let {code} = await this.$axios.$get('/api/islogin');
+      if(code!=0) return this.$router.replace('/user/login')
+    }
     
+  },
+  mounted(){
+    this.islogin()
   }
 }
 </script>

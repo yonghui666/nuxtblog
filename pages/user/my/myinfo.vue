@@ -159,5 +159,14 @@ export default {
       display: block;
     }
   }
+  
+}
+</style>
+
+<style>
+.el-dialog{
+  /* 手机端弹出层宽度问题适应 */
+  min-width: 350px;
+  max-width: 666px;
 }
 </style>

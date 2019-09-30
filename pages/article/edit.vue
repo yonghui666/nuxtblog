@@ -28,12 +28,14 @@ export default {
       }else if(this.$refs.editor.tag==''){
         return this.$message.error('请选择文章标签')
       }else{
+        //去除富文本文章里的空白符；
+        let zhaiyao = this.$refs.editor.editor.txt.text().replace(/&nbsp;/g,'').substring(0,60)
         let {code,msg} = await this.$axios.$post('/api/art/edit',{
           id:this.$refs.editor.editartinfo.id,
           title: this.$refs.editor.title.trim(),
           tag: this.$refs.editor.tag,
           content: this.$refs.editor.editorContent,
-          zhaiyao: this.$refs.editor.editor.txt.text().substring(0,100),
+          zhaiyao: zhaiyao,
           caogao: iscaogao
         })
         if(code==0){

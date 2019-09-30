@@ -30,7 +30,30 @@ export default {
     flag(index){
       this.isclick=index
     }
-  }
+  },
+  mounted(){
+    this.isclick = JSON.parse(localStorage.getItem('isclick'))
+  },
+  beforeRouteUpdate(to, from, next) {
+    //判断路由的参数，保留当前选中的标签；
+    switch (to.path) {
+      case '/user/my/myinfo':
+        localStorage.setItem('isclick',0)
+        break;
+      case '/user/my/myarticle':
+        localStorage.setItem('isclick',1)
+        break;
+      case '/user/my/mycaogao':
+        localStorage.setItem('isclick',2)
+        break;
+      case '/user/my/mycmt':
+        localStorage.setItem('isclick',3)
+        break;
+      default:
+        break;
+    }
+    next();
+  },
 }
 </script>
 

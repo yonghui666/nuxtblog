@@ -6,7 +6,7 @@
         <p>作者：{{userinfo.name}}</p>
         <p>签名：{{userinfo.qianming}}</p>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName" >
         <el-tab-pane label="文章" name="article">
           <Artlist :artlist="artlist">
             <el-pagination
@@ -54,13 +54,16 @@ export default {
   },
   methods:{
     async handleCurrentChange(val){
+      
       let {code,artlist,pagenum} = await this.$axios.$get('/api/art/search',{params:{
         name:this.$route.query.name,
         pagecurrent:val,
         pagesize:this.pagesize
       }})
+      scrollTo(0,0);
       this.artlist=artlist
       this.pagenum=pagenum
+      
     }
   },
   components:{Artlist}

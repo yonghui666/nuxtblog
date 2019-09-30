@@ -56,6 +56,7 @@ export default {
         pagecurrent:val,
         pagesize:this.pagesize
       }})
+      scrollTo(0,0);
       this.artlist=artlist
       this.pagenum=pagenum
     }

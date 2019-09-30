@@ -16,17 +16,36 @@
       <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:writerinfo.name}}">-->点击访问TA的主页</nuxt-link>
       <p class="time">发表时间：{{artinfo.time}}</p>
       <div v-html="artinfo.content" class="content"></div>
+      <hr style="margin:20px 0">
+      <Comment :cmtlist="cmtlist" :artid="artid"></Comment>
     </section>
   </div>
 </template>
 
 <script>
+import Comment from '~/components/Comment'
+
 export default {
   async asyncData({$axios,query}){
     let {code,msg,writerinfo} = await $axios.$get('/api/art/artinfo',{params:{id:query.id}})
     return { artinfo: msg,writerinfo:writerinfo}
   },
-  
+  components:{Comment},
+  data(){
+    return{
+      cmtlist:[],
+      artid:Number(this.$route.query.id)
+    }
+  },
+  mounted(){
+    this.getComment()
+  },
+  methods:{
+    async getComment(){
+      let {code,cmtlist} = await this.$axios.$get('/api/cmt/list?artid='+this.artid);
+      this.cmtlist=cmtlist
+    }
+  }
 }
 </script>
 
@@ -73,6 +92,7 @@ export default {
     .time{font-size: small; color: gray; margin: 10px 0;}
     .content{
       text-indent: 2em;
+      min-height: 500px;
     }
   }
 }

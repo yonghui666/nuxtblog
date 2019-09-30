@@ -42,13 +42,45 @@ export default {
       isclick:-1
     }
   },
-  created(){
-  },
   methods:{
     flag(index){
       this.isclick=index
     }
-  }
+  },
+  mounted(){
+    
+    this.isclick = JSON.parse(localStorage.getItem('isclick'))
+  },
+  beforeRouteUpdate(to, from, next) {
+    let tag = to.params.tag;
+    //判断路由的参数，保留当前选中的标签；
+    switch (tag) {
+      case 'recommend':
+        localStorage.setItem('isclick',0)
+        break;
+      case 'html':
+        localStorage.setItem('isclick',1)
+        break;
+      case 'css':
+        localStorage.setItem('isclick',2)
+        break;
+      case 'js':
+        localStorage.setItem('isclick',3)
+        break;
+      case 'node':
+        localStorage.setItem('isclick',4)
+        break;
+      case 'vue':
+        localStorage.setItem('isclick',5)
+        break;
+      case 'nofinish':
+        localStorage.setItem('isclick',6)
+        break;
+      default:
+        break;
+    }
+    next();
+  },
 }
 </script>
 
