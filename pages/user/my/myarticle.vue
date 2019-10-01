@@ -6,6 +6,7 @@
           layout="prev, pager, next"
           :pager-count="5"
           :page-size="pagesize"
+          :hide-on-single-page="pagenum<=pagesize"
           @current-change="handleCurrentChange"
           :total="pagenum">
         </el-pagination>

@@ -37,7 +37,8 @@ module.exports = {
       src:'~/plugins/wangeditor',
       ssr:false
     },
-    {src:'~/plugins/axios.js', ssr:false}
+    {src:'~/plugins/axios.js', ssr:false},
+    { src: '~/plugins/route', ssr: true }
   ],
   /*
   ** Nuxt.js dev-modules

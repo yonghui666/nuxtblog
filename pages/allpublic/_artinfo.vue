@@ -4,20 +4,29 @@
       <div class="writerinfo">
         <h2>作者信息</h2>
         <hr>
-        <div class="headimg"><img :src="writerinfo.headimg || '' " alt=""></div>
-        <p>作者：{{writerinfo.name}}</p>
-        <p>签名：{{writerinfo.qianming}}</p>
-        <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:writerinfo.name}}">-->点击访问TA的主页</nuxt-link>
+        <div class="headimg"><img :src="artinfo.headimg || '' " alt=""></div>
+        <p>作者：{{artinfo.user_name}}</p>
+        <p>签名：{{artinfo.qianming}}</p>
+        <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:artinfo.user_name}}">-->点击访问TA的主页</nuxt-link>
       </div>
     </div>
     <section class="articleinfo">
       <h2>{{artinfo.title}}</h2>
       <el-tag>{{artinfo.tag}}</el-tag>
-      <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:writerinfo.name}}">-->点击访问TA的主页</nuxt-link>
+      <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:artinfo.user_name}}">-->点击访问TA的主页</nuxt-link>
       <p class="time">发表时间：{{artinfo.time}}</p>
       <div v-html="artinfo.content" class="content"></div>
-      <hr style="margin:20px 0">
-      <Comment :cmtlist="cmtlist" :artid="artid"></Comment>
+      <hr style="margin:20px 0" ref="scrolltop">
+      <Comment :cmtlist="cmtlist" :artid="artid">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :hide-on-single-page="pagenum<11"
+          :pager-count="5"
+          @current-change="handleCurrentChange"
+          :total="pagenum">
+        </el-pagination>
+      </Comment>
     </section>
   </div>
 </template>
@@ -27,14 +36,15 @@ import Comment from '~/components/Comment'
 
 export default {
   async asyncData({$axios,query}){
-    let {code,msg,writerinfo} = await $axios.$get('/api/art/artinfo',{params:{id:query.id}})
-    return { artinfo: msg,writerinfo:writerinfo}
+    let {code,msg} = await $axios.$get('/api/art/artinfo',{params:{id:query.id}})
+    return { artinfo: msg}
   },
   components:{Comment},
   data(){
     return{
       cmtlist:[],
-      artid:Number(this.$route.query.id)
+      artid:Number(this.$route.query.id),
+      pagenum:100,
     }
   },
   mounted(){
@@ -42,8 +52,21 @@ export default {
   },
   methods:{
     async getComment(){
-      let {code,cmtlist} = await this.$axios.$get('/api/cmt/list?artid='+this.artid);
+      let {code,cmtlist,pagenum} = await this.$axios.$get('/api/cmt/list',{params:{
+        pagecurrent:1,
+        artid:this.artid
+      }});
       this.cmtlist=cmtlist
+      this.pagenum=pagenum
+    },
+    async handleCurrentChange(val){
+      let {code,cmtlist,pagenum} = await this.$axios.$get('/api/cmt/list',{params:{
+        artid:this.artid,
+        pagecurrent:val,
+      }})
+      scrollTo(0,this.$refs.scrolltop.offsetTop);
+      this.cmtlist=cmtlist
+      this.pagenum=pagenum
     }
   }
 }

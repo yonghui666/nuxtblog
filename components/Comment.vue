@@ -15,6 +15,7 @@
         </p>
         <p class="content">{{item.content}}</p>
       </div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -69,6 +70,7 @@ export default {
         padding-bottom: 10px;
         .headimg{
           width: 30px;
+          border-radius: 50%;
         }
         .spaner{
           font-size: 16px;

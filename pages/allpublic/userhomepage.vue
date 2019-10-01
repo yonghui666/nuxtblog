@@ -6,7 +6,8 @@
         <p>作者：{{userinfo.name}}</p>
         <p>签名：{{userinfo.qianming}}</p>
       </div>
-      <el-tabs v-model="activeName" >
+      <div ref="scrolltop" id="toper" ></div>
+      <el-tabs v-model="activeName">
         <el-tab-pane label="文章" name="article">
           <Artlist :artlist="artlist">
             <el-pagination
@@ -14,6 +15,7 @@
               layout="prev, pager, next"
               :pager-count="5"
               :page-size="pagesize"
+              :hide-on-single-page="pagenum<=pagesize"
               @current-change="handleCurrentChange"
               :total="pagenum">
             </el-pagination>
@@ -60,7 +62,7 @@ export default {
         pagecurrent:val,
         pagesize:this.pagesize
       }})
-      scrollTo(0,0);
+      scrollTo(0,this.$refs.scrolltop.offsetTop);
       this.artlist=artlist
       this.pagenum=pagenum
       

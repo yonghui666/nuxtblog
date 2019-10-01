@@ -25,12 +25,12 @@ export default {
   },
   methods:{
     async getMycaogao(){
-      let {msg,code} = await this.$axios.$get('/api/art/list?caogao=1')
+      let {myarticle,code} = await this.$axios.$get('/api/art/list?caogao=1')
       if(code==0){
-        if(msg.length==0){
+        if(myarticle.length==0){
           this.isnull=1
         }
-        this.mycaogao=msg
+        this.mycaogao=myarticle
       }else{
         this.$message('获取文章失败')
       }

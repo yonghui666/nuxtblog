@@ -67,6 +67,7 @@ export default {
         }
       })
       window.open(newpage.href, '_blank');
+      this.key=''
     },
     async logout(){
       if(! (localStorage.getItem('loginUser') )) return this.$message('请先登录');
@@ -74,7 +75,7 @@ export default {
       if(code==0){
         this.$message.success('退出成功')
         localStorage.removeItem('loginUser')
-        this.$router.replace('/user/login')
+        location.reload() //刷新当前页面
       }
     }
 
