@@ -20,6 +20,12 @@
       <el-form-item label="邮箱" prop="email">
         <el-input type="email" v-model="ruleForm.email"></el-input>
       </el-form-item>
+      <el-form-item label="验证码" prop="verify">
+        <div style="display:flex;">
+          <el-input type="text" v-model="ruleForm.verify"></el-input>
+          <div v-html="svgData" @click="getCaptcha"></div>
+        </div>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -61,7 +67,7 @@
       };
       var validatePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入密码'));
+          return callback(new Error('请输入密码'));
         }else if(! (/^[a-zA-Z0-9_-]{4,12}$/.test(value)) ){
           callback(new Error('请输入正确格式'));
         } else {
@@ -73,19 +79,30 @@
       };
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
+          return callback(new Error('请再次输入密码'));
         } else if (value !== this.ruleForm.pass) {
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
         }
       };
+      var validateVerify = (rule, value, callback) => {
+        if (value === '')return callback(new Error('请输入验证码'));
+        this.$axios.$get('/api/isverify?verify='+this.ruleForm.verify)
+        .then(res=>{
+          if(res.code==1){
+            callback(new Error('验证码错误!'));
+          }
+          callback();
+        })
+      };
       return {
         ruleForm: {
           name:'1111',
           pass: '1111',
           checkPass: '1111',
-          email: '1111@qq.com'
+          email: '1111@qq.com',
+          verify:''
         },
         rules: {
           name: [
@@ -99,12 +116,16 @@
           ],
           email: [
             { validator: validateEmail, trigger: 'blur' }
-          ]
-        }
+          ],
+          verify: [
+            { validator: validateVerify, trigger: 'blur' }
+          ],
+        },
+        svgData:''
       };
     },
-    mounted(){
-      
+    mounted() {
+      this.getCaptcha()
     },
     methods: {
       submitForm(formName) {
@@ -147,7 +168,13 @@
       async isRepeat(){
         let {code} = await this.$axios.$get(`/api/user/isrepeat?name=${this.ruleForm.name}`)
         return code==0 ? true:false;
-      }
+      },
+      getCaptcha(){
+        //获取验证码
+        this.$axios.$post("/api/captcha", {}).then((resData)=> {
+          this.svgData = resData.msg;
+        });
+      },
     }
   }
 </script>

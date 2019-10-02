@@ -16,8 +16,12 @@ export default function ({ $axios, redirect }) {
 
   $axios.interceptors.response.use(function (response) {
     // 用户信息是否超时，重定向到登录页面 
-    if (response.data.islogin == '请登录') {
-      redirect('/user/login')
+    if(process.client){
+      if (response.data.islogin == '请登录') {
+        // this.$message('请先登录')
+        // this.$store.commit('login',1)
+        redirect('/user/login')
+      }
     }
     return response
   }, function (error) {

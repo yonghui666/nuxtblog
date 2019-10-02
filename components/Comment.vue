@@ -4,7 +4,7 @@
        maxlength="200" v-model="content"
       ></textarea>
     <br>
-    <el-button type="primary" @click="addcmt">发表评论</el-button>
+    <el-button type="primary" size="small" round @click="addcmt">发表评论</el-button>
     <div class="cmt-list">
       <div class="list-item" v-for="(item,i) in cmtlist" :key="item.id">
         <p class="head">
@@ -14,6 +14,29 @@
           #{{i+1}}楼
         </p>
         <p class="content">{{item.content}}</p>
+        <el-collapse accordion>
+          <el-collapse-item>
+            <template slot="title">
+              回复<i class="header-icon el-icon-chat-dot-square"></i>
+            </template>
+            <div>
+              <textarea rows="3" placeholder="回复..." maxlength="200" v-model="reply"></textarea>
+            </div>
+            <div>
+              <el-button type="primary" size="mini" round @click="cmtReply(item.id)">发布</el-button>
+              <!-- <el-button type="info" size="mini" round>取消</el-button> -->
+            </div>
+          </el-collapse-item>
+          <el-collapse-item title="查看回复" @click.native="getReply(item.id)" v-if="item.isreply">
+            <div class="reply" v-for="reply in replylist" :key="reply.id">
+              <div class="head">
+                <img :src="reply.headimg" alt="">
+                <p>@{{reply.user_name}} 回复 #{{item.user_name}}</p>
+              </div>
+              <p class="replycontent">{{reply.content}}</p>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <slot></slot>
     </div>
@@ -34,10 +57,14 @@ export default {
   },
   data(){
     return{
-      content:''
+      content:'',
+      reply:'',
+      replylist:[]
     }
   },
-  mounted(){},
+  mounted(){
+
+  },
   methods:{
     async addcmt(){
       if(!this.content)return this.$message('请输入内容')
@@ -51,6 +78,26 @@ export default {
       }else{
         this.$message.error('发表失败')
       }
+    },
+    async cmtReply(cmtid){
+      if(!this.reply)return this.$message('请输入内容')
+      let {code} = await this.$axios.$post('/api/cmt/addreply',{
+        content:this.reply,
+        cmtid
+      })
+      if(code==0){
+        this.reply=''
+        this.$message.success('回复成功')
+      }else{
+        this.$message.error('回复失败')
+      }
+    },
+    async getReply(cmtid){
+      console.log(cmtid);
+      let {code,msg} = await this.$axios.$get('/api/cmt/replylist',{params:{cmtid}})
+      if(code==0){
+        this.replylist=msg
+      }
     }
   }
 }
@@ -59,12 +106,12 @@ export default {
 <style lang="scss" scoped>
 .comment{
   textarea{
-    width: 100%;
+    width: 99.8%;
   }
   .cmt-list{
     .list-item{
       padding: 10px;
-      border-bottom: 1px dashed #ccc;
+      // border-bottom: 1px dashed #ccc;
       .head{
         font-size: small;
         padding-bottom: 10px;
@@ -83,7 +130,23 @@ export default {
         padding-left: 20px;
         text-indent: 2em;
       }
+
+      .reply{
+        padding-left: 20px;
+        .head{
+          display: flex;
+          >img{width: 20px;border-radius: 50%;}
+        }
+        .replycontent{
+          text-indent: 2em;
+        }
+      }
     }
   }
+}
+</style>
+<style>
+.el-collapse{
+  border:none;
 }
 </style>
