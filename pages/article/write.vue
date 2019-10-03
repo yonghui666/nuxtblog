@@ -15,10 +15,17 @@ export default {
   data(){
     return{
       artinfo:this.$route.params.artinfo || {},
+      repeatclick:1
     }
   },
   methods:{
     async postArt(iscaogao){
+      //10s只能发布一次；
+      if(this.repeatclick==0) return this.$message.error('操作太频繁，稍后再试');
+      this.repeatclick=0;
+      setTimeout(() => {
+        this.repeatclick=1
+      }, 10000);
       if(! (this.$refs.editor.title.trim())){
         return this.$message.error('请输入文章标题')
       }else if(this.$refs.editor.tag==''){

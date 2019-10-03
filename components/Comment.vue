@@ -59,7 +59,8 @@ export default {
     return{
       content:'',
       reply:'',
-      replylist:[]
+      replylist:[],
+      repeatclick:1
     }
   },
   mounted(){
@@ -68,6 +69,11 @@ export default {
   methods:{
     async addcmt(){
       if(!this.content)return this.$message('请输入内容')
+      if(this.repeatclick==0) return this.$message.error('操作太频繁，稍后再试');
+      this.repeatclick=0;
+      setTimeout(() => {
+        this.repeatclick=1
+      }, 5000);
       let {code} = await this.$axios.$post('/api/cmt/addcmt',{
         content:this.content,
         artid:this.artid
@@ -75,6 +81,7 @@ export default {
       if(code==0){
         this.content=''
         this.$message.success('发表成功')
+        this.$parent.getComment();    //调用父组件父方法，刷新评论
       }else{
         this.$message.error('发表失败')
       }

@@ -21,7 +21,18 @@
             </el-pagination>
           </Artlist>
         </el-tab-pane>
-        <el-tab-pane label="评论" name="comment">评论</el-tab-pane>
+        <el-tab-pane label="评论" name="comment">
+          <MyCmt :mycmt="mycmt">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :pager-count="5"
+              :hide-on-single-page="mycmtPagenum<11"
+              @current-change="handleCurrentChangeCmt"
+              :total="mycmtPagenum">
+            </el-pagination>
+          </MyCmt>
+        </el-tab-pane>
         <el-tab-pane label="简介" name="third">TA暂无简介哦</el-tab-pane>
         <el-tab-pane label="待开发" name="fourth">待开发</el-tab-pane>
       </el-tabs>
@@ -34,6 +45,7 @@
 
 <script>
 import Artlist from '~/components/Artlist'
+import MyCmt from '~/components/MyCmt'
 
 export default {
   async asyncData({$axios,query}){
@@ -52,11 +64,16 @@ export default {
       activeName: 'article',
       pagenum:100,
       pagesize:6,
+      mycmt:[],
+      username:this.$route.query.name,
+      mycmtPagenum:100
     }
+  },
+  mounted(){
+    this.getMyCmt()
   },
   methods:{
     async handleCurrentChange(val){
-      
       let {code,artlist,pagenum} = await this.$axios.$get('/api/art/search',{params:{
         name:this.$route.query.name,
         pagecurrent:val,
@@ -65,10 +82,26 @@ export default {
       scrollTo(0,this.$refs.scrolltop.offsetTop);
       this.artlist=artlist
       this.pagenum=pagenum
-      
+    },
+    async getMyCmt(){
+      let {code,mycmt,mycmtPagenum}=await this.$axios.$get('/api/cmt/mycmt',{params:{
+        username:this.username,
+        pagecurrent:1
+      }})
+      this.mycmt=mycmt
+      this.mycmtPagenum=mycmtPagenum
+    },
+    async handleCurrentChangeCmt(val){
+      let {code,mycmt,mycmtPagenum}=await this.$axios.$get('/api/cmt/mycmt',{params:{
+        username:this.username,
+        pagecurrent:val
+      }})
+      scrollTo(0,this.$refs.scrolltop.offsetTop);
+      this.mycmt=mycmt
+      this.mycmtPagenum=mycmtPagenum
     }
   },
-  components:{Artlist}
+  components:{Artlist,MyCmt}
 }
 </script>
 
