@@ -57,7 +57,9 @@ module.exports = {
   },
   proxy: {    //能解决前端跨域问题
     '/api': {
-      target: 'http://127.0.0.1:3333',
+      // target: 'http://127.0.0.1:3333',
+      target: 'http://localhost:3333',
+      changeOrigin: true, 
       pathRewrite: {
         '^/api' : '/'
       }
