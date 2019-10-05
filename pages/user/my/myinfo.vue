@@ -110,12 +110,12 @@ export default {
     // 上传图片
     handleAvatarSuccess(res, file) {
       if(res){
+        this.myinfo.headimg=`http://image.xyfight.com/${res.key}`
         this.$axios.$post('/api/user/uploadheadimg',{
           imgurl:`http://image.xyfight.com/${res.key}`
         })
         .then(res=>{
           if(res.code==0){
-            this.getMyInfo()
             this.$message.success('上传成功');
           }else{
             this.$message.error('上传失败');
