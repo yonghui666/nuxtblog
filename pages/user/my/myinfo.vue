@@ -4,8 +4,11 @@
         <div class="headimg">
           <el-upload
             class="avatar-uploader"
-            action="/api/user/uploadheadimg"
+            action="http://up-z2.qiniu.com"
             :show-file-list="false"
+            :limit='1'
+            accept="image/jpeg,image/gif,image/png,image/bmp"
+            :data='uploadData'
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
             <img v-if="myinfo.headimg" :src="myinfo.headimg" class="avatar">
@@ -15,7 +18,6 @@
         <p>用户名：{{myinfo.name}}</p>
         <p>用户邮箱：{{myinfo.email}}</p>
         <p>个人签名：{{myinfo.qianming}}</p>
-
         <el-button type="primary" @click="dialogFormVisible = true">修改资料</el-button>
         <el-dialog title="修改资料" :visible.sync="dialogFormVisible">
           <el-form :model="form">
@@ -39,9 +41,7 @@
         </el-dialog>
       </template>
     </Panel>
-
 </template>
-
 
 <script>
 import Panel from '~/components/Panel.vue'
@@ -58,12 +58,20 @@ export default {
       formqianming:'',
       formLabelWidth: '80px',
       headimg:'',
+      uploadData: {key:'',token:''},
     }
   },
   mounted(){
-    this.getMyInfo()
+    this.getMyInfo();
+    this.getQiniuToken()
   },
   methods:{
+    getQiniuToken(){
+      this.$axios.$post('/api/art/niuqitoken',{})
+      .then(res=>{
+        this.uploadData.token = res.uploadToken
+      })
+    },
     async getMyInfo(){
       try {
         let {msg ,code} = await this.$axios.$get('/api/user/myinfo')
@@ -101,13 +109,21 @@ export default {
     },
     // 上传图片
     handleAvatarSuccess(res, file) {
-        // this.headimg = URL.createObjectURL(file.raw);
-        // this.headimg = res.msg
-        if(res.code==0){
-          this.getMyInfo()
-        }else{
-          this.$message.error('上传失败');
-        }
+      if(res){
+        this.$axios.$post('/api/user/uploadheadimg',{
+          imgurl:`http://image.xyfight.com/${res.key}`
+        })
+        .then(res=>{
+          if(res.code==0){
+            this.getMyInfo()
+            this.$message.success('上传成功');
+          }else{
+            this.$message.error('上传失败');
+          }
+        })
+      }else{
+        this.$message.error('上传失败');
+      }
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
@@ -118,6 +134,7 @@ export default {
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
+      this.uploadData.key = `headimg/${new Date().getTime()}_${file.name}`;
       return isJPG && isLt2M;
     }
 

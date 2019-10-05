@@ -95,7 +95,7 @@ export default {
     display: flex;
     img{
       width: 50px; margin-right: 5px;
-      // animation: logo 3s linear infinite;
+      animation: logo 3s linear infinite;
     }
     h2{
       font-weight: 888;

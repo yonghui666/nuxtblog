@@ -114,6 +114,7 @@ export default {
 .comment{
   textarea{
     width: 99.8%;
+    margin-bottom: 5px;
   }
   .cmt-list{
     .list-item{

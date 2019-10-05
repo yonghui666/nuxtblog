@@ -15,7 +15,7 @@
       <el-tag>{{artinfo.tag}}</el-tag>
       <nuxt-link :to="{path:'allpublic/userhomepage',query:{name:artinfo.user_name}}">-->点击访问TA的主页</nuxt-link>
       <p class="time">发表时间：{{artinfo.time}}</p>
-      <div v-html="artinfo.content" class="content"></div>
+      <div v-html="artinfo.content" class="content" id="articlecontent" ></div>
       <hr style="margin:20px 0" ref="scrolltop">
       <Comment :cmtlist="cmtlist" :artid="artid">
         <el-pagination
@@ -74,6 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/css/base.scss';
+@import '~/assets/css/md.scss';
 
 .info{
   margin: 0 8%;

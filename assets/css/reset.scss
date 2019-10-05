@@ -51,7 +51,7 @@ a{
 }
 
 //为手机端时清空外边距；
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 660px) {
     .userhomepage , .info, .home, .user, .write, .search{
         margin: 0 !important
     };
