@@ -1,5 +1,5 @@
 <template>
-  <section class="artinfo">
+  <section class="artinfo" id="artinfo">
     <h2>{{artinfo.title}}</h2>
     <el-tag>{{artinfo.tag}}</el-tag>
     <p class="time">发表时间：{{artinfo.time}}</p>
@@ -31,7 +31,22 @@ export default {
   }
   .time{font-size: small; color: gray; margin: 10px 0;}
   .content{
+    padding-top: 20px;
     text-indent: 2em;
+      
+  }
+}
+</style>
+
+<style lang="scss">
+#artinfo{
+  .content{
+    img{
+        width: 80%;
+        height: auto;
+        vertical-align: middle;
+        border: 0;
+      }
   }
 }
 </style>

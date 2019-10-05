@@ -38,11 +38,12 @@ export default {
       editorContent:'',
       title:'' ,
       tag:'' ,
-      editartinfo:{}
+      editartinfo:{},
+      uploadData: {key:'',token:''},
     }
   },
   beforeMount(){
-    
+    this.getQiniuToken()
   },
   methods:{
     clearbox(){
@@ -56,7 +57,13 @@ export default {
         this.editor.txt.html(this.editartinfo.content ||'<p>开始你的创作！</p>')
         this.editorContent = this.editartinfo.content 
       }
-    }
+    },
+    getQiniuToken(){
+      this.$axios.$post('/api/art/niuqitoken',{})
+      .then(res=>{
+        this.uploadData.token = res.uploadToken
+      })
+    },
   },
   mounted(){
     if (process.browser) {
@@ -65,27 +72,26 @@ export default {
       editor.customConfig.pasteFilterStyle = true
       // 忽略粘贴内容中的图片
       editor.customConfig.pasteIgnoreImg = false
-// 上传图片到服务器
-      editor.customConfig.uploadFileName = 'myFile'; //设置文件上传的参数名称
-      editor.customConfig.uploadImgServer = 'http://localhost:3333/uploadR/image?10'; //设置上传文件的服务器路径
+      // 上传图片到服务器
+      editor.customConfig.uploadImgServer = 'http://up-z2.qiniu.com'; //设置上传文件的服务器路径
       editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 将图片大小限制为 3M
-//自定义上传图片事件
-      editor.customConfig.uploadImgHooks = {
-          before: function(xhr, editor, files) {
-
-          },
-          success: function(xhr, editor, result) {
-              console.log("上传成功");
-          },
-          fail: function(xhr, editor, result) {
-              console.log("上传失败,原因是" + result);
-          },
-          error: function(xhr, editor) {
-              console.log("上传出错");
-          },
-          timeout: function(xhr, editor) {
-              console.log("上传超时");
+      editor.customConfig.customUploadImg =  (files, insert)=> {
+        // files 是 input 中选中的文件列表
+        // insert 是获取图片 url 后，插入到编辑器的方法
+          var formData = new FormData(); 
+          formData.append('file', files[0]);
+          formData.append('key', `editor/${new Date().getTime()}`);
+          formData.append('token',this.uploadData.token)
+          var config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
           }
+        // 上传代码返回结果之后，将图片插入到编辑器中
+        this.$axios.$post('http://up-z2.qiniu.com',formData,config)
+        .then(res=>{
+          insert(`http://image.xyfight.com/${res.key}`)
+        })
       }
 
       editor.customConfig.onchange = (html) => {
