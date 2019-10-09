@@ -2,7 +2,11 @@
   <div>
     <el-header style="padding:0 8%"><Head /></el-header>
     <nuxt />
-    <el-footer>@2019素材来源于网络，侵权即删</el-footer>
+    <el-footer>
+      <p>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">备案号：豫ICP备19008483号</a>
+      </p>
+    </el-footer>
   </div>
 </template>
 

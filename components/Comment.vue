@@ -20,17 +20,16 @@
               回复<i class="header-icon el-icon-chat-dot-square"></i>
             </template>
             <div>
-              <textarea rows="3" placeholder="回复..." maxlength="200" v-model="reply"></textarea>
+              <textarea rows="3" placeholder="回复..." maxlength="200" v-model="item.replytxt"></textarea>
             </div>
             <div>
-              <el-button type="primary" size="mini" round @click="cmtReply(item.id)">发布</el-button>
-              <!-- <el-button type="info" size="mini" round>取消</el-button> -->
+              <el-button type="primary" size="mini" round @click="cmtReply(item.id,item.replytxt)">发布</el-button>
             </div>
           </el-collapse-item>
-          <el-collapse-item title="查看回复" @click.native="getReply(item.id)" v-if="item.isreply">
-            <div class="reply" v-for="reply in replylist" :key="reply.id">
+          <el-collapse-item title="查看回复" v-if="item.isreply">
+            <div class="reply" v-for="reply in item.cmt_replydata" :key="reply.id">
               <div class="head">
-                <img :src="reply.headimg" alt="">
+                <img :src="reply.headimg">
                 <p>@{{reply.user_name}} 回复 #{{item.user_name}}</p>
               </div>
               <p class="replycontent">{{reply.content}}</p>
@@ -53,13 +52,14 @@ export default {
     },
     artid:{
       type:Number,
+    },
+    pagecurrent:{
+      type:Number
     }
   },
   data(){
     return{
       content:'',
-      reply:'',
-      replylist:[],
       repeatclick:1
     }
   },
@@ -81,31 +81,25 @@ export default {
       if(code==0){
         this.content=''
         this.$message.success('发表成功')
-        this.$parent.getComment();    //调用父组件父方法，刷新评论
+        this.$parent.handleCurrentChange(this.pagecurrent);    //调用父组件父方法，刷新评论;并保持当前页码不变
       }else{
         this.$message.error('发表失败')
       }
     },
-    async cmtReply(cmtid){
-      if(!this.reply)return this.$message('请输入内容')
+    async cmtReply(cmtid,replytxt){
+      if(!replytxt)return this.$message('请输入内容')
       let {code} = await this.$axios.$post('/api/cmt/addreply',{
-        content:this.reply,
+        content:replytxt,
         cmtid
       })
       if(code==0){
         this.reply=''
         this.$message.success('回复成功')
+        this.$parent.handleCurrentChange(this.pagecurrent);    //调用父组件父方法，刷新评论
       }else{
         this.$message.error('回复失败')
       }
     },
-    async getReply(cmtid){
-      console.log(cmtid);
-      let {code,msg} = await this.$axios.$get('/api/cmt/replylist',{params:{cmtid}})
-      if(code==0){
-        this.replylist=msg
-      }
-    }
   }
 }
 </script>

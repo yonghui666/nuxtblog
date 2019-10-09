@@ -2,7 +2,7 @@
   "name": "nuxtblog",
   "version": "1.0.0",
   "description": "My wondrous Nuxt.js project",
-  "author": "李小白",
+  "author": "李小白@65048448@qq.com",
   "private": true,
   "scripts": {
     "s": "cross-env NODE_ENV=development nodemon server/index.js --watch server",

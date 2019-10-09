@@ -17,7 +17,7 @@
       <p class="time">发表时间：{{artinfo.time}}</p>
       <div v-html="artinfo.content" class="content" id="articlecontent" ></div>
       <hr style="margin:20px 0" ref="scrolltop">
-      <Comment :cmtlist="cmtlist" :artid="artid">
+      <Comment :cmtlist="cmtlist" :artid="artid" :pagecurrent="pagecurrent">
         <el-pagination
           background
           layout="prev, pager, next"
@@ -45,6 +45,7 @@ export default {
       cmtlist:[],
       artid:Number(this.$route.query.id),
       pagenum:100,
+      pagecurrent:1,    // 当前页
     }
   },
   mounted(){
@@ -59,10 +60,11 @@ export default {
       this.cmtlist=cmtlist
       this.pagenum=pagenum
     },
-    async handleCurrentChange(val){
+    async handleCurrentChange(pagecurrent){
+      this.pagecurrent=pagecurrent;
       let {code,cmtlist,pagenum} = await this.$axios.$get('/api/cmt/list',{params:{
         artid:this.artid,
-        pagecurrent:val,
+        pagecurrent:this.pagecurrent,
       }})
       scrollTo(0,this.$refs.scrolltop.offsetTop);
       this.cmtlist=cmtlist
