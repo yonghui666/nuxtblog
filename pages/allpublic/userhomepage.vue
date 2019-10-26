@@ -117,7 +117,7 @@ export default {
       .userinfo{
         text-align: center;
         >img{
-          width: 150px;
+          width: 150px; height: 150px;
           border-radius: 50%;
         }
         p{

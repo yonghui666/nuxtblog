@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <Artlist :artlist="artlist" v-if="isnull">
+    <Artlist :artlist="artlist" >
       <el-pagination
         background
         layout="prev, pager, next"
@@ -10,7 +10,7 @@
         :total="pagenum">
       </el-pagination>
     </Artlist>
-    <div v-else>
+    <div v-if="isnull">
       <h2>抱歉没有找到结果哦！</h2>
     </div>
   </div>
@@ -41,12 +41,19 @@ export default {
         pagecurrent:1,
         pagesize:this.pagesize
       }})
+      const loading = this.$loading({
+          lock: true,
+          text: '搜索中',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       if(code==0){
-        this.isnull=1
+        loading.close();
         this.$message.success('搜索成功')
         this.artlist = artlist
         this.pagenum=pagenum
       }else{
+        this.isnull=1
         this.$message('抱歉没有找到结果哦')
       }
     },
@@ -72,6 +79,6 @@ export default {
 .search{
   margin: 0 8%;
   @extend .box;
-  min-height: 777px;
+  min-height: calc(100vh - 140px);
 }
 </style>

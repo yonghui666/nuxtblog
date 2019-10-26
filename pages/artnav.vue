@@ -88,8 +88,7 @@ export default {
   .home{
     display: flex;
     margin: 0 8%;
-
-    min-height: 666px;
+    min-height: calc(100vh - 140px);
     .pcnav{
       min-width: 120px;
       background-color: #fff;

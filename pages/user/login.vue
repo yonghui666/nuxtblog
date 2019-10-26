@@ -41,18 +41,16 @@ export default {
         name:this.name.trim(),
         pass:this.pass.trim()  
       })
+      const loading = this.$loading({
+        lock: true,
+        text: '登录中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       if(code==0){
         localStorage.setItem('loginUser',JSON.stringify({name:this.name,pass:this.pass}) )
         this.$store.commit('login',0)
-        const loading = this.$loading({
-          lock: true,
-          text: '登录中',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        setTimeout(() => {
-          loading.close();
-        }, 500);
+        loading.close();
         this.$message('登录成功');
         this.$router.push('/user/my/myinfo')
       }else{

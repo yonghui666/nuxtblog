@@ -153,11 +153,14 @@ export default {
   }
   .headimg{
     .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      >img{
+        border-radius: 50%;
+      }
     }
     .avatar-uploader .el-upload:hover {
       border-color: #409EFF;

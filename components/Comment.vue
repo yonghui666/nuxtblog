@@ -118,7 +118,7 @@ export default {
         font-size: small;
         padding-bottom: 10px;
         .headimg{
-          width: 30px;
+          width: 30px; height: 30px;
           border-radius: 50%;
         }
         .spaner{
@@ -137,7 +137,7 @@ export default {
         padding-left: 20px;
         .head{
           display: flex;
-          >img{width: 20px;border-radius: 50%;}
+          >img{width: 20px;height: 20px; border-radius: 50%;}
         }
         .replycontent{
           text-indent: 2em;

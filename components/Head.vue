@@ -1,15 +1,33 @@
 <template>
   <div class="header">
     <nuxt-link to="/" class="logo">
-      <img src="~/assets/images/logo2.png" alt="">
+      <img src="~/assets/images/logo2.png" alt />
       <h2 class="hidden-xs-only">创作吧</h2>
     </nuxt-link>
     <div class="search">
-      <el-input placeholder="搜索一下" v-model="key" @keyup.enter.native="search" class="input-with-select">
+      <el-input
+        placeholder="搜索一下"
+        v-model="key"
+        @keyup.enter.native="search"
+        class="input-with-select"
+      >
         <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
       </el-input>
     </div>
-    <div class="rbox" v-if="this.$store.state.islogin">
+    <div class="rbox hidden-sm-and-up" v-if="this.$store.state.islogin">
+      <el-dropdown trigger="click">
+        <el-button type="primary" icon="el-icon-more" circle></el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <nuxt-link to="/user/login">点击登录</nuxt-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <nuxt-link to="/user/register">点击注册</nuxt-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <div class="rbox hidden-xs-only" v-if="this.$store.state.islogin">
       <nuxt-link to="/user/login">
         <el-button type="primary">登录</el-button>
       </nuxt-link>
@@ -20,7 +38,8 @@
     <div class="rbox" v-else>
       <el-dropdown trigger="click">
         <el-button type="primary">
-          我的<i class="el-icon-arrow-down el-icon--right"></i>
+          我的
+          <i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
@@ -32,9 +51,7 @@
           <el-dropdown-item>
             <nuxt-link to="/article/write">开始创作</nuxt-link>
           </el-dropdown-item>
-          <el-dropdown-item @click.native="logout">
-            退出登录
-          </el-dropdown-item>
+          <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           <el-dropdown-item>
             <nuxt-link to="/user/my/myinfo">待增功能</nuxt-link>
           </el-dropdown-item>
@@ -46,58 +63,63 @@
 
 <script>
 export default {
-  name:'Head',
-  data(){
-    return{
-      key:''
+  name: "Head",
+  data() {
+    return {
+      key: ""
+    };
+  },
+  mounted() {
+    if (localStorage.getItem("loginUser")) {
+      this.$store.commit("login", 0);
     }
   },
-  mounted(){
-    if(localStorage.getItem('loginUser')){
-      this.$store.commit('login',0)
-    }
-  },
-  methods:{
-    search(){
+  methods: {
+    search() {
       //点击搜索跳转到新的标签页
       let newpage = this.$router.resolve({
-        path:'/allpublic/search',
-        query:{
-          key:this.key
+        path: "/allpublic/search",
+        query: {
+          key: this.key
         }
-      })
-      window.open(newpage.href, '_blank');
-      this.key=''
+      });
+      window.open(newpage.href, "_blank");
+      this.key = "";
     },
-    async logout(){
-      if(! (localStorage.getItem('loginUser') )) return this.$message('请先登录');
-      let {code} = await this.$axios.$get('/api/logout')
-      if(code==0){
-        this.$message.success('退出成功')
-        localStorage.removeItem('loginUser')
-        location.reload() //刷新当前页面
+    async logout() {
+      if (!localStorage.getItem("loginUser")) return this.$message("请先登录");
+      let { code } = await this.$axios.$get("/api/logout");
+      if (code == 0) {
+        this.$message.success("退出成功");
+        localStorage.removeItem("loginUser");
+        location.reload(); //刷新当前页面
       }
     }
-
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@keyframes logo{
-  from{transform: rotate(0)}
-  to{transform: rotate(360deg)}
+@keyframes logo {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.header{
+.header {
   display: flex;
   justify-content: space-between;
-  .logo{
+  .logo {
     display: flex;
-    img{
-      width: 50px; margin-right: 5px;
+    img {
+      width: 57px;
+      margin-right: 0 4px;
+      height: 58px;
       animation: logo 3s linear infinite;
     }
-    h2{
+    h2 {
       font-weight: 888;
       font-size: 24px;
       color: #000;
@@ -105,13 +127,9 @@ export default {
   }
 }
 
-@media screen and (max-width: 700px){
-  .search{
+@media screen and (max-width: 700px) {
+  .search {
     width: 50%;
   }
-  .rbox{
-    width: 20%;
-  }
 }
-
 </style>

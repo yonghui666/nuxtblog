@@ -1,5 +1,5 @@
 <template>
-  <section :class="[listClass,cname]">
+  <section :class="[listClass,cname]" v-show="artlist.length">
     <nuxt-link  class="list_item" 
       v-for="item in artlist" :key="item.id"
       :to="{name: to,query:{id:item.id}}"
